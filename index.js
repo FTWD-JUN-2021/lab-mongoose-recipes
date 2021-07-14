@@ -13,30 +13,50 @@ let newRecipe = {
   title: "Hamburger",
   cuisine: "American",
 };
-mongoose
+// mongoose
+//   .connect(MONGODB_URI, {
+//     useCreateIndex: true,
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   })
+//   .then((self) => {
+//     console.log(`Connected to the database: "${self.connection.name}"`);
+//     // Before adding any recipes to the database, let's remove all existing ones
+//     return Recipe.deleteMany();
+//   })
+//   .then(() => {
+//     Recipe.create(newRecipe).then((res) => {
+//       console.log(res.title);
+//     });
+//     // Run your code here, after you have insured that the connection was made
+//     Recipe.insertMany(data).then((res) => {
+//       console.log(res.map((eachRes) => eachRes.title));
+//       console.log("race condition");
+//       Recipe.updateOne(
+//         { title: "Rigatoni alla Genovese" },
+//         { duration: 100 }
+//       ).then((res) => console.log("The recipe was updated successfully", res));
+//       Recipe.deleteOne({title: "Carrot Cake"}).then((res) => console.log("The recipe was deleted successfully", res));
+//     });
+//   })
+//   .catch((error) => {
+//     console.error("Error connecting to the database", error);
+//   });
+
+
+  mongoose
   .connect(MONGODB_URI, {
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then((self) => {
+  .then( async (self) => {
     console.log(`Connected to the database: "${self.connection.name}"`);
-    // Before adding any recipes to the database, let's remove all existing ones
-    return Recipe.deleteMany();
-  })
-  .then(() => {
-    Recipe.create(newRecipe).then((res) => {
-      console.log(res.title);
-    });
-    // Run your code here, after you have insured that the connection was made
-    Recipe.insertMany(data).then((res) => {
-      console.log(res.map((eachRes) => eachRes.title));
-      console.log("race condition");
-      Recipe.updateOne(
-        { title: "Rigatoni alla Genovese" },
-        { duration: 100 }
-      ).then((res) => console.log("The recipe was updated successfully", res));
-    });
+    await Recipe.deleteMany();
+    await Recipe.create(newRecipe);
+    await Recipe.insertMany(data);
+    await Recipe.updateOne({ title: "Rigatoni alla Genovese" },{ duration: 100 })
+    await Recipe.deleteOne({title: "Carrot Cake"});
   })
   .catch((error) => {
     console.error("Error connecting to the database", error);
