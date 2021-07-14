@@ -24,8 +24,9 @@ mongoose
     Recipe.create({
       title: "Hamburger",
       cuisine: "American",
-    });
+    }).then(res =>{console.log(res.title)});
     // Run your code here, after you have insured that the connection was made
+    Recipe.insertMany(data).then(res => console.log(res.map(eachRes => eachRes.title)))
   })
   .catch((error) => {
     console.error("Error connecting to the database", error);
